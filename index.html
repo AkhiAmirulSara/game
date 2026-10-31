@@ -1,0 +1,1087 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIR IS COMING! 🎒</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;700;900&display=swap');
+
+:root {
+  --ink: #24304b;
+  --purple: #7657e8;
+  --pink: #ff719a;
+  --yellow: #ffd66b;
+  --panel: #fffaf0;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(circle at 15% 15%, #b8a8ff 0, transparent 30%),
+    radial-gradient(circle at 85% 85%, #ffb9d0 0, transparent 30%),
+    #22243f;
+  color: var(--ink);
+  font-family: 'Nunito', sans-serif;
+}
+
+.game-shell {
+  width: min(1100px, 100%);
+  padding: 18px;
+  border: 3px solid rgba(255,255,255,.8);
+  border-radius: 28px;
+  background: rgba(255,250,240,.97);
+  box-shadow: 0 25px 80px #14152d80;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.brand h1 {
+  margin: 0;
+  font-family: 'Baloo 2', cursive;
+  font-size: clamp(25px, 4vw, 40px);
+  line-height: 1;
+  color: #5942c6;
+  letter-spacing: -1px;
+}
+
+.brand p {
+  margin: 6px 0 0;
+  font-size: 12px;
+  font-weight: 900;
+  color: #88839e;
+  letter-spacing: 2px;
+}
+
+.hud {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.hud-card {
+  min-width: 95px;
+  padding: 9px 13px;
+  border: 2px solid #eee5ff;
+  border-radius: 15px;
+  background: white;
+  text-align: center;
+}
+
+.hud-card small {
+  display: block;
+  font-size: 10px;
+  color: #89839e;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.hud-card strong {
+  font-size: 17px;
+  font-weight: 900;
+}
+
+.canvas-wrap {
+  position: relative;
+  overflow: hidden;
+  border: 4px solid #34324f;
+  border-radius: 20px;
+  background: #f7e6bd;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 960 / 580;
+  image-rendering: auto;
+}
+
+.bottom-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 13px;
+}
+
+.controls {
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 2;
+  color: #77718c;
+}
+
+.key {
+  display: inline-block;
+  min-width: 25px;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: white;
+  border: 1px solid #ded7f0;
+  color: #5942c6;
+  text-align: center;
+  box-shadow: 0 2px 0 #ded7f0;
+}
+
+button {
+  padding: 10px 17px;
+  border: 0;
+  border-radius: 12px;
+  background: #7657e8;
+  color: white;
+  font-family: inherit;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #5138b5;
+  transition: transform .15s, filter .15s;
+}
+
+button:hover {
+  filter: brightness(1.08);
+  transform: translateY(-2px);
+}
+
+button:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #5138b5;
+}
+
+#soundBtn {
+  background: #ff719a;
+  box-shadow: 0 4px 0 #d94a79;
+}
+
+@media (max-width: 600px) {
+  body { padding: 8px; }
+  .game-shell { padding: 10px; border-radius: 18px; }
+  .hud-card { min-width: 75px; padding: 7px; }
+  .brand p { letter-spacing: 1px; }
+}
+</style>
+</head>
+
+<body>
+<div class="game-shell">
+
+  <div class="topbar">
+    <div class="brand">
+      <h1>🚨 SIR IS COMING!</h1>
+      <p>THE CLASSROOM ESCAPE CHALLENGE</p>
+    </div>
+
+    <div class="hud">
+      <div class="hud-card">
+        <small>HOMEWORK</small>
+        <strong id="pages">📄 0 / 3</strong>
+      </div>
+      <div class="hud-card">
+        <small>STATUS</small>
+        <strong id="status">READY 😎</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="canvas-wrap">
+    <canvas id="game" width="960" height="580"></canvas>
+  </div>
+
+  <div class="bottom-bar">
+    <div class="controls">
+      MOVE <span class="key">W</span> <span class="key">A</span>
+      <span class="key">S</span> <span class="key">D</span>
+      or <span class="key">↑</span> <span class="key">←</span>
+      <span class="key">↓</span> <span class="key">→</span>
+      &nbsp; PAUSE <span class="key">P</span>
+      <br>
+      Collect all 3 homework pages and reach the 🚪 exit. Avoid Sir's red vision!
+    </div>
+
+    <div>
+      <button id="soundBtn">🔊 SOUND: ON</button>
+      <button id="restartBtn">↻ RESTART</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+const pagesLabel = document.getElementById("pages");
+const statusLabel = document.getElementById("status");
+const soundBtn = document.getElementById("soundBtn");
+
+const W = canvas.width;
+const H = canvas.height;
+
+const keys = {};
+let gameState = "menu";
+let soundOn = true;
+let frame = 0;
+let lastTime = 0;
+let audioContext = null;
+
+const player = {
+  x: 110, y: 465, r: 15,
+  speed: 220,
+  face: 0,
+  moving: false
+};
+
+const teacher = {
+  x: 500, y: 200,
+  startX: 400,
+  endX: 745,
+  direction: 1,
+  speed: 85,
+  face: 0,
+  alert: false
+};
+
+let papers = [];
+let collected = 0;
+let exitUnlocked = false;
+let toast = "";
+let toastTimer = 0;
+let pauseBefore = "playing";
+
+function resetGame() {
+  player.x = 110;
+  player.y = 465;
+  player.face = 0;
+  player.moving = false;
+
+  teacher.x = 500;
+  teacher.y = 200;
+  teacher.direction = 1;
+  teacher.speed = 85;
+  teacher.face = 0;
+  teacher.alert = false;
+
+  papers = [
+    { x: 180, y: 135, got: false, phase: 0 },
+    { x: 820, y: 390, got: false, phase: 2 },
+    { x: 495, y: 475, got: false, phase: 4 }
+  ];
+
+  collected = 0;
+  exitUnlocked = false;
+  toast = "";
+  toastTimer = 0;
+  gameState = "menu";
+  updateHUD();
+}
+
+function updateHUD() {
+  pagesLabel.textContent = `📄 ${collected} / 3`;
+
+  if (gameState === "caught") statusLabel.textContent = "CAUGHT! 😵";
+  else if (gameState === "won") statusLabel.textContent = "ESCAPED! 🏆";
+  else if (gameState === "paused") statusLabel.textContent = "PAUSED ⏸";
+  else if (gameState === "playing") statusLabel.textContent =
+    teacher.alert ? "DANGER! 🚨" : "SNEAKING 🤫";
+  else statusLabel.textContent = "READY 😎";
+}
+
+function beep(frequency = 500, duration = 0.08) {
+  if (!soundOn) return;
+
+  try {
+    audioContext ??= new (window.AudioContext || window.webkitAudioContext)();
+    if (audioContext.state === "suspended") audioContext.resume();
+
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+
+    oscillator.frequency.value = frequency;
+    oscillator.type = "sine";
+    gain.gain.setValueAtTime(0.08, audioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(
+      0.001, audioContext.currentTime + duration
+    );
+
+    oscillator.start();
+    oscillator.stop(audioContext.currentTime + duration);
+  } catch (e) {}
+}
+
+function roundedRect(x, y, w, h, r, color, stroke) {
+  ctx.beginPath();
+  ctx.roundRect(x, y, w, h, r);
+  ctx.fillStyle = color;
+  ctx.fill();
+
+  if (stroke) {
+    ctx.strokeStyle = stroke;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+}
+
+function drawClassroom() {
+  // Walls
+  ctx.fillStyle = "#f7e5bd";
+  ctx.fillRect(0, 0, W, H);
+
+  // Wall decoration
+  ctx.fillStyle = "#f0d5a1";
+  ctx.fillRect(0, 0, W, 18);
+  ctx.fillRect(0, 0, 18, H);
+  ctx.fillRect(W - 18, 0, 18, H);
+
+  // Floor
+  ctx.fillStyle = "#dba66e";
+  ctx.fillRect(18, 365, W - 36, H - 383);
+
+  for (let y = 370; y < H; y += 42) {
+    ctx.strokeStyle = "#c58b58";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(18, y);
+    ctx.lineTo(W - 18, y);
+    ctx.stroke();
+
+    for (let x = 40 + ((y / 42) % 2) * 35; x < W; x += 125) {
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x, y + 42);
+      ctx.stroke();
+    }
+  }
+
+  // Backboard
+  roundedRect(290, 32, 380, 120, 12, "#8b563e", "#71422f");
+  roundedRect(300, 42, 360, 100, 7, "#32685d");
+
+  ctx.fillStyle = "#f7f2d5";
+  ctx.font = "bold 22px 'Baloo 2', sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText("WELCOME TO CLASS  ✏️", 480, 77);
+
+  ctx.font = "bold 15px Nunito, sans-serif";
+  ctx.fillStyle = "#d7f2c4";
+  ctx.fillText("HOMEWORK • DISCIPLINE • GOOD LUCK!", 480, 111);
+
+  // Windows
+  drawWindow(48, 48);
+  drawWindow(770, 48);
+
+  // Wall clock
+  ctx.fillStyle = "#fff9e8";
+  ctx.beginPath();
+  ctx.arc(480, 190, 24, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = "#8c6a53";
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  ctx.strokeStyle = "#4b4058";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(480, 190);
+  ctx.lineTo(480, 175);
+  ctx.moveTo(480, 190);
+  ctx.lineTo(492, 195);
+  ctx.stroke();
+
+  // Teacher's desk
+  drawDesk(430, 235, 160, 48, "#a96842");
+  roundedRect(451, 211, 80, 28, 5, "#f9f5e9", "#d7c7a4");
+  ctx.fillStyle = "#7657e8";
+  ctx.font = "bold 11px Nunito";
+  ctx.fillText("ATTENDANCE", 491, 228);
+
+  // Student desks
+  drawDesk(75, 315, 150, 38, "#c9854c");
+  drawDesk(295, 315, 150, 38, "#c9854c");
+  drawDesk(515, 315, 150, 38, "#c9854c");
+  drawDesk(735, 315, 150, 38, "#c9854c");
+
+  drawChair(115, 355);
+  drawChair(335, 355);
+  drawChair(555, 355);
+  drawChair(775, 355);
+
+  // Exit
+  drawDoor();
+
+  // Small decorations
+  ctx.textAlign = "left";
+  ctx.font = "22px sans-serif";
+  ctx.fillText("⭐", 250, 80);
+  ctx.fillText("📚", 686, 95);
+  ctx.fillText("✏️", 236, 188);
+
+  // Labels
+  ctx.fillStyle = "#7c573c";
+  ctx.font = "bold 11px Nunito";
+  ctx.textAlign = "center";
+  ctx.fillText("TEACHER'S ZONE", 510, 303);
+}
+
+function drawWindow(x, y) {
+  roundedRect(x, y, 125, 100, 8, "#8c573e");
+  roundedRect(x + 7, y + 7, 111, 86, 4, "#9ee3f5");
+
+  ctx.fillStyle = "#fff3b0";
+  ctx.beginPath();
+  ctx.arc(x + 87, y + 26, 13, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = "#b0e8f3";
+  ctx.fillRect(x + 7, y + 52, 111, 41);
+
+  ctx.strokeStyle = "#8c573e";
+  ctx.lineWidth = 5;
+  ctx.beginPath();
+  ctx.moveTo(x + 62, y + 7);
+  ctx.lineTo(x + 62, y + 93);
+  ctx.moveTo(x + 7, y + 48);
+  ctx.lineTo(x + 118, y + 48);
+  ctx.stroke();
+}
+
+function drawDesk(x, y, w, h, color) {
+  // Desk shadow
+  roundedRect(x + 5, y + 8, w, h, 6, "#9b6a45");
+  // Desktop
+  roundedRect(x, y, w, h, 6, color, "#8f5935");
+
+  // Books
+  roundedRect(x + 15, y - 10, 35, 10, 3, "#ff719a");
+  roundedRect(x + 19, y - 16, 33, 9, 3, "#f6cf63");
+  roundedRect(x + w - 40, y - 12, 25, 12, 3, "#7a83ef");
+
+  ctx.strokeStyle = "#8b5738";
+  ctx.lineWidth = 5;
+  ctx.beginPath();
+  ctx.moveTo(x + 15, y + h);
+  ctx.lineTo(x + 15, y + h + 17);
+  ctx.moveTo(x + w - 15, y + h);
+  ctx.lineTo(x + w - 15, y + h + 17);
+  ctx.stroke();
+}
+
+function drawChair(x, y) {
+  roundedRect(x, y, 52, 29, 7, "#7959b9", "#60438f");
+  roundedRect(x + 5, y + 4, 42, 18, 5, "#a58ce3");
+
+  ctx.strokeStyle = "#60438f";
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.moveTo(x + 8, y + 27);
+  ctx.lineTo(x + 8, y + 37);
+  ctx.moveTo(x + 44, y + 27);
+  ctx.lineTo(x + 44, y + 37);
+  ctx.stroke();
+}
+
+function drawDoor() {
+  const x = 866, y = 188, w = 65, h = 177;
+
+  roundedRect(x, y, w, h, 7, "#8a563e", "#69402f");
+  roundedRect(x + 7, y + 7, w - 14, h - 7, 4, "#b77b53");
+
+  ctx.fillStyle = "#f5d9a0";
+  ctx.beginPath();
+  ctx.arc(x + w - 17, y + 90, 4, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = exitUnlocked ? "#2d9b68" : "#fff4d7";
+  ctx.font = "bold 11px Nunito";
+  ctx.textAlign = "center";
+  ctx.fillText(exitUnlocked ? "OPEN!" : "EXIT", x + w / 2, y - 10);
+
+  if (exitUnlocked) {
+    ctx.font = "20px sans-serif";
+    ctx.fillText("✨", x + w / 2, y + 55);
+  }
+}
+
+// Draw a complete cartoon teacher character
+function drawTeacher() {
+  const x = teacher.x;
+  const y = teacher.y;
+  const walking = Math.sin(frame * 0.012) * 3;
+  const look = teacher.direction;
+
+  ctx.save();
+  ctx.translate(x, y);
+
+  // Shadow
+  ctx.fillStyle = "#40354a30";
+  ctx.beginPath();
+  ctx.ellipse(0, 27, 27, 9, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Legs
+  roundedRect(-17, 9, 13, 24 + walking, 6, "#33405e");
+  roundedRect(4, 9, 13, 24 - walking, 6, "#33405e");
+
+  // Shoes
+  roundedRect(-22, 28 + walking, 20, 9, 4, "#342e43");
+  roundedRect(1, 28 - walking, 20, 9, 4, "#342e43");
+
+  // Body / shirt
+  roundedRect(-23, -25, 46, 43, 12, "#6e55ce", "#503a9d");
+
+  // Shirt details
+  ctx.fillStyle = "#fff1d5";
+  ctx.beginPath();
+  ctx.moveTo(-8, -24);
+  ctx.lineTo(0, -12);
+  ctx.lineTo(8, -24);
+  ctx.lineTo(3, 4);
+  ctx.lineTo(-3, 4);
+  ctx.closePath();
+  ctx.fill();
+
+  // Arms
+  ctx.strokeStyle = "#d99769";
+  ctx.lineWidth = 10;
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  ctx.moveTo(-20, -15);
+  ctx.lineTo(-29, 2 + walking);
+  ctx.moveTo(20, -15);
+  ctx.lineTo(29, 0 - walking);
+  ctx.stroke();
+
+  // Head
+  ctx.fillStyle = "#e9b184";
+  ctx.beginPath();
+  ctx.arc(0, -39, 23, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Ears
+  ctx.beginPath();
+  ctx.arc(-22, -39, 6, 0, Math.PI * 2);
+  ctx.arc(22, -39, 6, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Hair
+  ctx.fillStyle = "#413344";
+  ctx.beginPath();
+  ctx.arc(0, -45, 23, Math.PI, Math.PI * 2);
+  ctx.lineTo(21, -36);
+  ctx.quadraticCurveTo(13, -43, 8, -40);
+  ctx.quadraticCurveTo(-1, -48, -8, -40);
+  ctx.quadraticCurveTo(-17, -43, -21, -35);
+  ctx.closePath();
+  ctx.fill();
+
+  // Eyes
+  ctx.fillStyle = "#382b3c";
+  ctx.beginPath();
+  ctx.ellipse(-8 + look * 2, -39, 2.5, teacher.alert ? 4 : 3, 0, 0, Math.PI * 2);
+  ctx.ellipse(8 + look * 2, -39, 2.5, teacher.alert ? 4 : 3, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Eyebrows
+  ctx.strokeStyle = "#413344";
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(-13, -46);
+  ctx.lineTo(-4, teacher.alert ? -49 : -45);
+  ctx.moveTo(4, teacher.alert ? -49 : -45);
+  ctx.lineTo(13, -46);
+  ctx.stroke();
+
+  // Nose
+  ctx.fillStyle = "#cb8d67";
+  ctx.beginPath();
+  ctx.arc(0, -33, 3, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Expression
+  ctx.strokeStyle = teacher.alert ? "#9e263c" : "#9a4e4e";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+
+  if (teacher.alert) {
+    ctx.arc(0, -27, 5, Math.PI, Math.PI * 2);
+  } else {
+    ctx.arc(0, -32, 6, 0.15, Math.PI - 0.15);
+  }
+  ctx.stroke();
+
+  // Tie
+  ctx.fillStyle = "#ff719a";
+  ctx.beginPath();
+  ctx.moveTo(-5, -19);
+  ctx.lineTo(5, -19);
+  ctx.lineTo(3, -6);
+  ctx.lineTo(0, -2);
+  ctx.lineTo(-3, -6);
+  ctx.closePath();
+  ctx.fill();
+
+  // Teacher badge
+  ctx.fillStyle = "#ffd66b";
+  ctx.beginPath();
+  ctx.arc(14, -11, 4, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Alert sign
+  if (teacher.alert) {
+    ctx.font = "bold 24px sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("❗", 0, -75);
+  }
+
+  ctx.restore();
+
+  // Name label
+  roundedRect(x - 38, y + 43, 76, 20, 8, "#fff8e8", "#e7d5bd");
+  ctx.fillStyle = "#6045ad";
+  ctx.font = "900 10px Nunito";
+  ctx.textAlign = "center";
+  ctx.fillText("STRICT SIR", x, y + 56);
+}
+
+function drawPlayer() {
+  const x = player.x;
+  const y = player.y;
+  const walk = player.moving ? Math.sin(frame * 0.025) * 3 : 0;
+
+  ctx.save();
+  ctx.translate(x, y);
+
+  // Shadow
+  ctx.fillStyle = "#45394b30";
+  ctx.beginPath();
+  ctx.ellipse(0, 18, 18, 6, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Backpack
+  roundedRect(-18, -9, 14, 23, 5, "#ff719a", "#d74c79");
+
+  // Legs
+  roundedRect(-11, 6, 9, 16 + walk, 4, "#33405e");
+  roundedRect(3, 6, 9, 16 - walk, 4, "#33405e");
+
+  // Shoes
+  roundedRect(-13, 19 + walk, 13, 6, 3, "#493e5c");
+  roundedRect(2, 19 - walk, 13, 6, 3, "#493e5c");
+
+  // Body
+  roundedRect(-15, -13, 30, 25, 9, "#4b91e8", "#2f68b5");
+
+  // Collar
+  ctx.fillStyle = "#fff4dc";
+  ctx.beginPath();
+  ctx.moveTo(-6, -12);
+  ctx.lineTo(0, -6);
+  ctx.lineTo(6, -12);
+  ctx.lineTo(2, -2);
+  ctx.lineTo(-2, -2);
+  ctx.closePath();
+  ctx.fill();
+
+  // Head
+  ctx.fillStyle = "#f0bd91";
+  ctx.beginPath();
+  ctx.arc(0, -22, 16, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Hair
+  ctx.fillStyle = "#3b2e3e";
+  ctx.beginPath();
+  ctx.arc(0, -27, 16, Math.PI, Math.PI * 2);
+  ctx.lineTo(15, -22);
+  ctx.quadraticCurveTo(6, -28, 0, -24);
+  ctx.quadraticCurveTo(-9, -29, -15, -21);
+  ctx.closePath();
+  ctx.fill();
+
+  // Eyes look toward movement
+  const eyeOffset = Math.cos(player.face) * 1.2;
+
+  ctx.fillStyle = "#342c42";
+  ctx.beginPath();
+  ctx.arc(-5 + eyeOffset, -22, 2, 0, Math.PI * 2);
+  ctx.arc(5 + eyeOffset, -22, 2, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Smile
+  ctx.strokeStyle = "#a55f54";
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.arc(0, -18, 5, 0.2, Math.PI - 0.2);
+  ctx.stroke();
+
+  // Tiny star badge
+  ctx.fillStyle = "#ffd66b";
+  ctx.font = "12px sans-serif";
+  ctx.fillText("★", 3, 5);
+
+  ctx.restore();
+}
+
+function drawVisionCone() {
+  const angle = teacher.direction > 0 ? 0 : Math.PI;
+  const range = 255;
+  const spread = 0.48;
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(teacher.x, teacher.y - 15);
+  ctx.arc(
+    teacher.x, teacher.y - 15,
+    range, angle - spread, angle + spread
+  );
+  ctx.closePath();
+
+  ctx.fillStyle = teacher.alert
+    ? "rgba(255, 45, 75, 0.25)"
+    : "rgba(255, 91, 101, 0.17)";
+  ctx.fill();
+
+  ctx.strokeStyle = "rgba(255, 75, 95, 0.30)";
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawPaper(paper) {
+  if (paper.got) return;
+
+  const bob = Math.sin(frame * 0.004 + paper.phase) * 5;
+  const x = paper.x;
+  const y = paper.y + bob;
+
+  ctx.save();
+
+  // Glow
+  ctx.fillStyle = "#ffe47c55";
+  ctx.beginPath();
+  ctx.arc(x, y, 25, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.translate(x, y);
+  ctx.rotate(Math.sin(frame * 0.003 + paper.phase) * 0.07);
+
+  roundedRect(-12, -16, 24, 32, 4, "#fffdf2", "#e3bd66");
+
+  ctx.strokeStyle = "#83b7e8";
+  ctx.lineWidth = 1;
+  for (let i = -7; i <= 8; i += 6) {
+    ctx.beginPath();
+    ctx.moveTo(-7, i);
+    ctx.lineTo(7, i);
+    ctx.stroke();
+  }
+
+  ctx.fillStyle = "#ff719a";
+  ctx.font = "bold 10px Nunito";
+  ctx.textAlign = "center";
+  ctx.fillText("HW", 0, -3);
+
+  ctx.restore();
+}
+
+function drawOverlay(title, subtitle, buttonText) {
+  ctx.fillStyle = "rgba(34, 31, 59, 0.72)";
+  ctx.fillRect(0, 0, W, H);
+
+  roundedRect(205, 135, 550, 300, 24, "#fffaf0", "#ffffff");
+
+  ctx.textAlign = "center";
+  ctx.fillStyle = "#5b43c5";
+  ctx.font = "800 42px 'Baloo 2', sans-serif";
+  ctx.fillText(title, W / 2, 208);
+
+  ctx.fillStyle = "#746c88";
+  ctx.font = "bold 17px Nunito";
+  ctx.fillText(subtitle, W / 2, 250);
+
+  if (gameState === "menu") {
+    ctx.font = "bold 16px Nunito";
+    ctx.fillStyle = "#d95d84";
+    ctx.fillText("Collect 3 pages. Don't let Sir catch you!", W / 2, 291);
+
+    ctx.font = "42px sans-serif";
+    ctx.fillText("📚  🏃  👨‍🏫", W / 2, 347);
+  } else if (gameState === "won") {
+    ctx.font = "40px sans-serif";
+    ctx.fillText("🏆 🎉 ⭐", W / 2, 343);
+  } else if (gameState === "caught") {
+    ctx.font = "40px sans-serif";
+    ctx.fillText("😵 📕 🚨", W / 2, 343);
+  } else if (gameState === "paused") {
+    ctx.font = "38px sans-serif";
+    ctx.fillText("⏸️", W / 2, 343);
+  }
+
+  roundedRect(340, 365, 280, 48, 14, "#7657e8");
+
+  ctx.fillStyle = "white";
+  ctx.font = "900 17px Nunito";
+  ctx.fillText(buttonText, W / 2, 395);
+}
+
+function drawToast() {
+  if (toastTimer <= 0) return;
+
+  ctx.save();
+  ctx.globalAlpha = Math.min(1, toastTimer);
+  roundedRect(310, 20, 340, 38, 13, "#fffaf0", "#e6d8bd");
+  ctx.fillStyle = "#5c43bd";
+  ctx.textAlign = "center";
+  ctx.font = "900 15px Nunito";
+  ctx.fillText(toast, W / 2, 44);
+  ctx.restore();
+}
+
+function drawGame() {
+  drawClassroom();
+
+  // Vision behind the characters
+  if (gameState !== "menu" && gameState !== "won" && gameState !== "caught") {
+    drawVisionCone();
+  }
+
+  papers.forEach(drawPaper);
+  drawTeacher();
+  drawPlayer();
+  drawToast();
+
+  if (gameState === "menu") {
+    drawOverlay("SIR IS COMING!", "The homework escape starts now!", "▶ START GAME");
+  } else if (gameState === "caught") {
+    drawOverlay("OH NO! CAUGHT!", "Sir saw you! Try a sneakier route.", "↻ TRY AGAIN");
+  } else if (gameState === "won") {
+    drawOverlay("YOU ESCAPED!", "Homework delivered. Freedom unlocked!", "↻ PLAY AGAIN");
+  } else if (gameState === "paused") {
+    drawOverlay("GAME PAUSED", "Take a breath, then continue.", "▶ RESUME");
+  }
+}
+
+function pointInVisionCone() {
+  const dx = player.x - teacher.x;
+  const dy = player.y - (teacher.y - 15);
+  const distance = Math.hypot(dx, dy);
+
+  if (distance > 255) return false;
+
+  const targetAngle = Math.atan2(dy, dx);
+  const facingAngle = teacher.direction > 0 ? 0 : Math.PI;
+
+  let diff = targetAngle - facingAngle;
+  diff = Math.atan2(Math.sin(diff), Math.cos(diff));
+
+  return Math.abs(diff) < 0.48;
+}
+
+function update(dt) {
+  frame += dt * 60;
+
+  if (toastTimer > 0) toastTimer -= dt * 1.6;
+
+  if (gameState !== "playing") return;
+
+  let vx = 0;
+  let vy = 0;
+
+  if (keys.ArrowLeft || keys.a || keys.A) vx--;
+  if (keys.ArrowRight || keys.d || keys.D) vx++;
+  if (keys.ArrowUp || keys.w || keys.W) vy--;
+  if (keys.ArrowDown || keys.s || keys.S) vy++;
+
+  const length = Math.hypot(vx, vy);
+  player.moving = length > 0;
+
+  if (length > 0) {
+    vx /= length;
+    vy /= length;
+    player.face = Math.atan2(vy, vx);
+
+    player.x += vx * player.speed * dt;
+    player.y += vy * player.speed * dt;
+  }
+
+  // Keep player inside the classroom
+  player.x = Math.max(35, Math.min(W - 35, player.x));
+  player.y = Math.max(125, Math.min(H - 35, player.y));
+
+  // Sir patrols back and forth
+  teacher.x += teacher.direction * teacher.speed * dt;
+
+  if (teacher.x >= teacher.endX) {
+    teacher.x = teacher.endX;
+    teacher.direction = -1;
+  }
+
+  if (teacher.x <= teacher.startX) {
+    teacher.x = teacher.startX;
+    teacher.direction = 1;
+  }
+
+  teacher.alert = pointInVisionCone();
+
+  // Collect homework pages
+  for (const paper of papers) {
+    if (paper.got) continue;
+
+    const distance = Math.hypot(
+      player.x - paper.x,
+      player.y - paper.y
+    );
+
+    if (distance < 27) {
+      paper.got = true;
+      collected++;
+      beep(650 + collected * 100);
+      toast = collected === 3
+        ? "ALL HOMEWORK COLLECTED! FIND THE EXIT! 🚪"
+        : "HOMEWORK COLLECTED! 📄";
+
+      toastTimer = 2.2;
+      updateHUD();
+
+      if (collected === 3) {
+        exitUnlocked = true;
+      }
+    }
+  }
+
+  // Sir catches player when they are in his vision
+  if (teacher.alert) {
+    gameState = "caught";
+    beep(180, 0.25);
+    updateHUD();
+    return;
+  }
+
+  // Escape through the door after collecting all pages
+  if (
+    exitUnlocked &&
+    player.x > 845 &&
+    player.y > 185 &&
+    player.y < 365
+  ) {
+    gameState = "won";
+    beep(800, 0.12);
+    setTimeout(() => beep(1100, 0.18), 120);
+    updateHUD();
+  }
+}
+
+function loop(timestamp) {
+  const dt = Math.min((timestamp - lastTime) / 1000 || 0, 0.04);
+  lastTime = timestamp;
+
+  update(dt);
+  drawGame();
+
+  requestAnimationFrame(loop);
+}
+
+function startGame() {
+  if (gameState === "menu" || gameState === "caught" || gameState === "won") {
+    resetGame();
+  }
+
+  gameState = "playing";
+  updateHUD();
+  beep(550);
+}
+
+function togglePause() {
+  if (gameState === "playing") {
+    gameState = "paused";
+  } else if (gameState === "paused") {
+    gameState = "playing";
+  }
+
+  updateHUD();
+}
+
+document.addEventListener("keydown", (e) => {
+  const key = e.key;
+
+  if (
+    ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].includes(key)
+  ) {
+    e.preventDefault();
+  }
+
+  keys[key] = true;
+
+  if (key.toLowerCase() === "p" && !e.repeat) {
+    if (gameState === "playing" || gameState === "paused") togglePause();
+  }
+
+  if (key === "Escape" && !e.repeat) {
+    if (gameState === "playing" || gameState === "paused") togglePause();
+  }
+
+  if (
+    (key === "Enter" || key === " ") &&
+    !e.repeat &&
+    ["menu", "caught", "won", "paused"].includes(gameState)
+  ) {
+    startGame();
+  }
+});
+
+document.addEventListener("keyup", (e) => {
+  keys[e.key] = false;
+});
+
+window.addEventListener("blur", () => {
+  for (const key in keys) keys[key] = false;
+});
+
+canvas.addEventListener("click", (e) => {
+  const rect = canvas.getBoundingClientRect();
+
+  const x = (e.clientX - rect.left) * (W / rect.width);
+  const y = (e.clientY - rect.top) * (H / rect.height);
+
+  if (
+    ["menu", "caught", "won", "paused"].includes(gameState) &&
+    x > 320 && x < 640 &&
+    y > 350 && y < 430
+  ) {
+    startGame();
+  }
+});
+
+document.getElementById("restartBtn").addEventListener("click", () => {
+  resetGame();
+  startGame();
+});
+
+soundBtn.addEventListener("click", () => {
+  soundOn = !soundOn;
+  soundBtn.textContent = soundOn ? "🔊 SOUND: ON" : "🔇 SOUND: OFF";
+  if (soundOn) beep(650);
+});
+
+resetGame();
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
